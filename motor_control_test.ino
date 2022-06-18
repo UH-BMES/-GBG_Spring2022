@@ -87,21 +87,8 @@ void checkSettings()
 void syncMotors(void)
 /* This function causes motor2 to move in the same direction as motor1 */
 {
-  if (digitalRead(motor1pin1) == HIGH && digitalRead(motor1pin2) == LOW)
-  {
-    digitalWrite(motor2pin1, HIGH);
-    digitalWrite(motor2pin2, LOW);
-  }
-  else if (digitalRead(motor1pin1) == LOW && digitalRead(motor1pin2) == HIGH)
-  {
-    digitalWrite(motor2pin1, LOW);
-    digitalWrite(motor2pin2, HIGH);
-  }
-  else
-  {
-    digitalWrite(motor2pin1, LOW);
-    digitalWrite(motor2pin2, LOW);
-  }
+  digitalWrite(motor2pin1, digitalRead(motor1pin1));
+  digitalWrite(motor2pin2, digitalRead(motor1pin2));
   
   // Output Motor Status
   Serial.print("\nMotor Status: "); 
@@ -117,6 +104,7 @@ void syncMotors(void)
   {
     Serial.print("At Rest");
   }
+  
   delay(1000); // 1 second time delay between inputs
 }
 
@@ -157,9 +145,6 @@ void loop()
   // Read raw/normalized accel/gyro data and print to serial monitor
   Vector Gyro = mpu.readNormalizeGyro();
   float X = Gyro.XAxis, Y = Gyro.YAxis, Z = Gyro.ZAxis;
-  // if (X > 0) { Serial.print("X: "); Serial.println(X); }
-  // if (Y > 0) { Serial.print(" Y: "); Serial.println(Y); }
-  // if (Z > 0) { Serial.print(" Z: "); Serial.println(Z); }
   
   // Motor Control
   if (Y > 100)
@@ -170,23 +155,6 @@ void loop()
   {
     moveBackward();
   }
-  /*
-  if (Y > 100) 
-  { 
-    digitalWrite(motor1pin1, HIGH);
-    digitalWrite(motor1pin2, LOW);
-    digitalWrite(motor2pin1, HIGH);
-    digitalWrite(motor2pin2, LOW);
-    delay(1000);
-  }
-  else if (Y < 100)
-  {
-    digitalWrite(motor1pin1, LOW);
-    digitalWrite(motor1pin2, LOW);
-    digitalWrite(motor2pin1, LOW);
-    digitalWrite(motor2pin2, LOW);    
-  }
-  */
   
-  delay(50); // 50 ms time delay
+  delay(10); // 10 ms time delay
 }
